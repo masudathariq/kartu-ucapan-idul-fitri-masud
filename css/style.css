@@ -705,6 +705,14 @@ body {
     color: #D4EAFF;
 }
 
+.k-pantun {
+    margin-top: 18px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #FFE082;
+    font-style: italic;
+    opacity: 0.9;
+}
 
 /* Doa Arab */
 
