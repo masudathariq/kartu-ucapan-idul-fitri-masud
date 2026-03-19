@@ -705,14 +705,6 @@ body {
     color: #D4EAFF;
 }
 
-.k-pantun {
-    margin-top: 18px;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #FFE082;
-    font-style: italic;
-    opacity: 0.9;
-}
 
 /* Doa Arab */
 
@@ -996,4 +988,15 @@ body {
         transform: none !important;
         animation: none !important;
     }
+}
+
+#tanggal-lokasi {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.8s ease;
+}
+
+.kartu.on #tanggal-lokasi {
+    opacity: 1;
+    transform: translateY(0);
 }
