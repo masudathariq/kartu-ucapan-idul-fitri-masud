@@ -1,0 +1,991 @@
+/* =========================================
+   ROOT VARIABLES
+========================================= */
+
+:root {
+    --navy: #06101f;
+    --navy-c: #0c1d38;
+    --navy-hi: #132d54;
+    --blue: #1976D2;
+    --blue-2: #42A5F5;
+    --blue-3: #90CAF9;
+    --gold: #C9A84C;
+    --gold-2: #DDB95E;
+    --gold-3: #F0D080;
+    --gold-4: #FFF3CD;
+    --muted: rgba(188, 218, 255, .58);
+}
+
+
+/* =========================================
+   RESET
+========================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--navy);
+    color: #D0E8FF;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 2px;
+}
+
+
+/* =========================================
+   FIXED CANVAS LAYERS
+========================================= */
+
+#bgCanvas,
+#fxCanvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+#bgCanvas {
+    z-index: 0;
+}
+
+#fxCanvas {
+    z-index: 2;
+}
+
+#particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+
+/* =========================================
+   LOADER
+========================================= */
+
+#loader {
+    position: fixed;
+    inset: 0;
+    background: var(--navy);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    transition: opacity 1s ease, visibility 1s ease;
+}
+
+#loader.out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.ld-ring {
+    width: 94px;
+    height: 94px;
+    border-radius: 50%;
+    border: 2px solid rgba(201, 168, 76, .12);
+    border-top-color: var(--gold-3);
+    border-right-color: var(--gold);
+    animation: spinRing 1.6s linear infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+@keyframes spinRing {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.ld-moon {
+    position: absolute;
+    font-size: 46px;
+    filter: drop-shadow(0 0 16px rgba(240, 208, 128, .95));
+    animation: moonPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes moonPulse {
+    0%,
+    100% {
+        transform: scale(1) rotate(-12deg);
+    }
+    50% {
+        transform: scale(1.1) rotate(12deg);
+    }
+}
+
+.ld-dots {
+    display: flex;
+    gap: 9px;
+}
+
+.ld-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: dotB .9s ease-in-out infinite;
+}
+
+.ld-dot:nth-child(2) {
+    animation-delay: .15s;
+    background: var(--gold-3);
+}
+
+.ld-dot:nth-child(3) {
+    animation-delay: .30s;
+    background: var(--blue-2);
+}
+
+@keyframes dotB {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: .4;
+    }
+    50% {
+        transform: translateY(-9px);
+        opacity: 1;
+    }
+}
+
+.ld-text {
+    font-family: 'Amiri', serif;
+    font-size: 1rem;
+    color: var(--gold-3);
+    letter-spacing: 2px;
+    opacity: .75;
+}
+
+
+/* =========================================
+   CONFETTI
+========================================= */
+
+.cf {
+    position: fixed;
+    top: -24px;
+    pointer-events: none;
+    z-index: 200;
+    animation: cfFall linear forwards;
+}
+
+@keyframes cfFall {
+    0% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    85% {
+        opacity: .7;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(108vh) rotate(800deg) scale(.3);
+    }
+}
+
+
+/* =========================================
+   FLOATING PARTICLES (lentera)
+========================================= */
+
+.par {
+    position: absolute;
+    bottom: -60px;
+    animation: parUp linear infinite;
+    opacity: 0;
+    filter: drop-shadow(0 0 5px rgba(201, 168, 76, .6));
+    will-change: transform;
+}
+
+@keyframes parUp {
+    0% {
+        opacity: 0;
+        transform: translateY(0) translateX(-10px) rotate(-6deg);
+    }
+    7% {
+        opacity: .8;
+    }
+    93% {
+        opacity: .5;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-118vh) translateX(22px) rotate(8deg);
+    }
+}
+
+
+/* =========================================
+   PAGE WRAPPER
+========================================= */
+
+.page {
+    position: relative;
+    z-index: 3;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(36px, 8vw, 72px) clamp(12px, 4vw, 22px);
+}
+
+
+/* =========================================
+   PULSE RINGS
+========================================= */
+
+.pr {
+    position: absolute;
+    border-radius: 28px;
+    pointer-events: none;
+    border: 1px solid rgba(201, 168, 76, .18);
+    width: min(640px, 96vw);
+    animation: prExpand 3.5s ease-out infinite;
+}
+
+.pr:nth-child(2) {
+    animation-delay: 1.1s;
+    border-color: rgba(66, 165, 245, .1);
+}
+
+.pr:nth-child(3) {
+    animation-delay: 2.2s;
+    border-color: rgba(201, 168, 76, .08);
+}
+
+@keyframes prExpand {
+    0% {
+        transform: scale(1);
+        opacity: .65;
+    }
+    100% {
+        transform: scale(1.15);
+        opacity: 0;
+    }
+}
+
+
+/* =========================================
+   KARTU UTAMA
+========================================= */
+
+.kartu {
+    width: min(640px, 96vw);
+    background: linear-gradient(160deg, #0f2040 0%, #091629 50%, #0c1e3d 100%);
+    border: 1px solid rgba(201, 168, 76, .45);
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 0 1px rgba(201, 168, 76, .07), 0 40px 100px rgba(0, 0, 0, .7), 0 0 80px rgba(21, 101, 192, .17), inset 0 1px 0 rgba(240, 208, 128, .13);
+    opacity: 0;
+    transform: translateY(56px) scale(.93);
+}
+
+.kartu.on {
+    animation: kartuIn 1.2s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+
+@keyframes kartuIn {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* Border glow berputar */
+
+.kartu-glow {
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 25px;
+    z-index: 0;
+    pointer-events: none;
+    background: conic-gradient( from 0deg, transparent 0deg, rgba(201, 168, 76, 0) 40deg, rgba(201, 168, 76, .6) 90deg, #F0D080 110deg, rgba(201, 168, 76, .6) 130deg, rgba(201, 168, 76, 0) 180deg, transparent 360deg);
+    opacity: 0;
+    transition: opacity 1.2s ease 1.8s;
+    animation: glowSpin 8s linear infinite;
+}
+
+.kartu-glow-inner {
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 23px;
+    background: linear-gradient(160deg, #0f2040 0%, #091629 50%, #0c1e3d 100%);
+}
+
+.kartu.on .kartu-glow {
+    opacity: 1;
+}
+
+@keyframes glowSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* Band emas atas dengan shimmer */
+
+.kartu-topband {
+    height: 4px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    background: linear-gradient(90deg, transparent 0%, rgba(201, 168, 76, .3) 10%, #F0D080 35%, #C9A84C 50%, #F0D080 65%, rgba(201, 168, 76, .3) 90%, transparent 100%);
+}
+
+.kartu-topband::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .75), transparent);
+    transform: translateX(-100%);
+    animation: bandSweep 3.5s ease 3s infinite;
+}
+
+@keyframes bandSweep {
+    to {
+        transform: translateX(220%);
+    }
+}
+
+
+/* =========================================
+   HEADER KARTU
+========================================= */
+
+.kartu-header {
+    position: relative;
+    height: clamp(140px, 24vw, 200px);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.kartu-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(21, 101, 192, .28) 0%, transparent 60%), radial-gradient(ellipse at 72% 50%, rgba(201, 168, 76, .10) 0%, transparent 55%);
+    animation: auroraMove 9s ease-in-out infinite alternate;
+}
+
+@keyframes auroraMove {
+    0% {
+        opacity: .7;
+        filter: blur(0px);
+    }
+    100% {
+        opacity: 1;
+        filter: blur(4px);
+    }
+}
+
+.mosque-svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .14;
+}
+
+
+/* Bintang berkelip di header */
+
+.hstar {
+    position: absolute;
+    color: #F0D080;
+    animation: hTwinkle ease-in-out infinite;
+    font-size: .68rem;
+}
+
+@keyframes hTwinkle {
+    0%,
+    100% {
+        opacity: .08;
+        transform: scale(.7);
+    }
+    50% {
+        opacity: .95;
+        transform: scale(1.4);
+    }
+}
+
+
+/* Cincin di sekitar bulan */
+
+.moon-wrap {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.moon-ring {
+    position: absolute;
+    width: clamp(70px, 18vw, 100px);
+    height: clamp(70px, 18vw, 100px);
+    border-radius: 50%;
+    border: 1px solid rgba(201, 168, 76, .3);
+    animation: moonRingPulse 2s ease-in-out infinite;
+}
+
+.moon-ring-2 {
+    position: absolute;
+    width: clamp(86px, 22vw, 122px);
+    height: clamp(86px, 22vw, 122px);
+    border-radius: 50%;
+    border: 1px solid rgba(201, 168, 76, .15);
+    animation: moonRingPulse 2s ease-in-out infinite;
+    animation-delay: .5s;
+}
+
+@keyframes moonRingPulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: .6;
+    }
+    50% {
+        transform: scale(1.06);
+        opacity: 1;
+    }
+}
+
+.header-moon {
+    font-size: clamp(2.8rem, 8vw, 4.2rem);
+    filter: drop-shadow(0 0 22px rgba(240, 208, 128, .9));
+    animation: moonFloat 4s ease-in-out infinite;
+}
+
+@keyframes moonFloat {
+    0%,
+    100% {
+        transform: translateY(0) rotate(-12deg) scale(1);
+    }
+    50% {
+        transform: translateY(-13px) rotate(12deg) scale(1.05);
+    }
+}
+
+
+/* Ornamen sudut kartu */
+
+.oc {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    opacity: 0;
+    z-index: 2;
+}
+
+.oc svg {
+    width: 100%;
+    height: 100%;
+}
+
+.oc-tl {
+    top: 10px;
+    left: 10px;
+}
+
+.oc-tr {
+    top: 10px;
+    right: 10px;
+    transform: scaleX(-1);
+}
+
+.oc-bl {
+    bottom: 10px;
+    left: 10px;
+    transform: scaleY(-1);
+}
+
+.oc-br {
+    bottom: 10px;
+    right: 10px;
+    transform: scale(-1, -1);
+}
+
+.kartu.on .oc-tl {
+    animation: ocIn .5s ease 1.5s forwards;
+}
+
+.kartu.on .oc-tr {
+    animation: ocIn .5s ease 1.7s forwards;
+}
+
+.kartu.on .oc-bl {
+    animation: ocIn .5s ease 1.9s forwards;
+}
+
+.kartu.on .oc-br {
+    animation: ocIn .5s ease 2.1s forwards;
+}
+
+@keyframes ocIn {
+    to {
+        opacity: .55;
+    }
+}
+
+
+/* =========================================
+   BODY KARTU
+========================================= */
+
+.kartu-body {
+    padding: clamp(26px, 5vw, 50px) clamp(20px, 5vw, 50px) clamp(30px, 6vw, 54px);
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+
+/* Animasi stagger tiap elemen */
+
+.ke {
+    opacity: 0;
+    transform: translateY(18px);
+}
+
+.kartu.on .ke {
+    animation: keIn .7s ease forwards;
+}
+
+@keyframes keIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Bismillah */
+
+.k-bismillah {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.2rem, 3.6vw, 2.1rem);
+    color: #F0D080;
+    line-height: 1.6;
+    margin-bottom: 18px;
+    text-shadow: 0 0 28px rgba(240, 208, 128, .35);
+}
+
+
+/* Divider */
+
+.k-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.k-divider::before,
+.k-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201, 168, 76, .45), transparent);
+}
+
+.k-divider span {
+    font-size: .88rem;
+    color: #C9A84C;
+    opacity: .75;
+    letter-spacing: 5px;
+}
+
+
+/* Judul */
+
+.k-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(1.55rem, 5.8vw, 3.1rem);
+    font-weight: 700;
+    line-height: 1.18;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #DDB95E 0%, #F0D080 28%, #fffbe0 48%, #F0D080 68%, #C9A84C 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 300%;
+    animation: keIn .9s ease forwards, titleShimmer 5s ease 3.2s infinite !important;
+}
+
+@keyframes titleShimmer {
+    0%,
+    100% {
+        background-position: 0%;
+    }
+    50% {
+        background-position: 100%;
+    }
+}
+
+
+/* Sub judul */
+
+.k-sub {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(.7rem, 2vw, .98rem);
+    color: #42A5F5;
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+}
+
+
+/* Quote Arab */
+
+.k-quote {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.1rem, 3.3vw, 1.75rem);
+    color: #F0D080;
+    line-height: 1.8;
+    margin-bottom: 22px;
+    font-style: italic;
+}
+
+.k-quote small {
+    font-size: .62em;
+    opacity: .65;
+    letter-spacing: 1px;
+    display: block;
+    margin-top: 4px;
+}
+
+
+/* Pesan utama */
+
+.k-pesan {
+    font-size: clamp(.87rem, 2.2vw, 1.01rem);
+    font-weight: 300;
+    line-height: 2.05;
+    color: rgba(208, 232, 255, .83);
+    margin-bottom: 26px;
+}
+
+.k-pesan strong {
+    font-weight: 700;
+    color: #D4EAFF;
+}
+
+
+/* Doa Arab */
+
+.k-doa {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1.05rem, 3.1vw, 1.85rem);
+    color: #DDB95E;
+    line-height: 1.95;
+    margin-bottom: 6px;
+    text-shadow: 0 0 20px rgba(201, 168, 76, .25);
+}
+
+
+/* Doa latin */
+
+.k-doa-latin {
+    font-family: 'Amiri', serif;
+    font-style: italic;
+    font-size: clamp(.78rem, 1.8vw, .94rem);
+    color: rgba(208, 232, 255, .48);
+    margin-bottom: 30px;
+    line-height: 1.75;
+}
+
+
+/* Garis pemisah dengan berlian */
+
+.k-rule {
+    border: none;
+    border-top: 1px solid rgba(66, 165, 245, .13);
+    margin: 0 0 26px;
+    position: relative;
+    overflow: visible;
+}
+
+.k-rule::after {
+    content: '◆';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: .55rem;
+    color: #C9A84C;
+    background: #091629;
+    padding: 0 7px;
+    opacity: .65;
+}
+
+
+/* Pengirim */
+
+.k-pengirim-label {
+    font-size: clamp(.6rem, 1.5vw, .7rem);
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    color: rgba(144, 202, 249, .38);
+    margin-bottom: 8px;
+}
+
+.k-pengirim-nama {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(.95rem, 3.1vw, 1.5rem);
+    font-weight: 700;
+    color: #F0D080;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    display: inline-block;
+    position: relative;
+}
+
+.k-pengirim-nama::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #C9A84C, transparent);
+    transform: scaleX(0);
+    transform-origin: center;
+}
+
+.kartu.on .k-pengirim-nama::after {
+    animation: nameUnderline .9s ease 3.6s forwards;
+}
+
+@keyframes nameUnderline {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+.k-pengirim-sub {
+    font-size: clamp(.77rem, 1.8vw, .87rem);
+    font-weight: 300;
+    color: var(--muted);
+    margin-top: 6px;
+    font-style: italic;
+}
+
+
+/* Band emas bawah */
+
+.kartu-botband {
+    height: 3px;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(90deg, transparent, rgba(201, 168, 76, .18) 25%, rgba(201, 168, 76, .45) 50%, rgba(201, 168, 76, .18) 75%, transparent);
+}
+
+
+/* =========================================
+   TOMBOL AKSI
+========================================= */
+
+.actions {
+    display: flex;
+    gap: clamp(10px, 2.5vw, 14px);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: clamp(20px, 4vw, 30px);
+    opacity: 0;
+    transform: translateY(18px);
+    width: min(640px, 96vw);
+}
+
+.actions.on {
+    animation: keIn .8s ease forwards;
+}
+
+.btn {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(.72rem, 1.8vw, .82rem);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: clamp(11px, 2vw, 13px) clamp(18px, 4vw, 26px);
+    border-radius: 40px;
+    border: none;
+    cursor: pointer;
+    transition: all .3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, .14);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s;
+    border-radius: inherit;
+}
+
+.btn:hover::after {
+    transform: scaleX(1);
+}
+
+.btn-gold {
+    background: linear-gradient(135deg, #C9A84C 0%, #F0D080 50%, #DDB95E 100%);
+    color: #06101f;
+}
+
+.btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 34px rgba(201, 168, 76, .48);
+}
+
+.btn-blue {
+    background: transparent;
+    color: #42A5F5;
+    border: 1.5px solid rgba(66, 165, 245, .4);
+}
+
+.btn-blue:hover {
+    background: rgba(21, 101, 192, .22);
+    border-color: #42A5F5;
+    transform: translateY(-3px);
+}
+
+
+/* =========================================
+   TOAST
+========================================= */
+
+#toast {
+    position: fixed;
+    bottom: clamp(16px, 4vw, 26px);
+    left: 50%;
+    transform: translateX(-50%) translateY(72px);
+    background: #132d54;
+    border: 1px solid #C9A84C;
+    color: #F0D080;
+    font-size: .82rem;
+    font-weight: 700;
+    padding: 10px 24px;
+    border-radius: 40px;
+    z-index: 9999;
+    transition: transform .45s cubic-bezier(.34, 1.56, .64, 1);
+    white-space: nowrap;
+    max-width: 92vw;
+    text-align: center;
+}
+
+#toast.show {
+    transform: translateX(-50%) translateY(0);
+}
+
+
+/* =========================================
+   RESPONSIVE MOBILE
+========================================= */
+
+@media (max-width: 420px) {
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .actions .btn {
+        justify-content: center;
+        width: 100%;
+    }
+    .kartu-header {
+        height: 110px;
+    }
+    .oc {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+
+/* =========================================
+   PRINT
+========================================= */
+
+@media print {
+    #bgCanvas,
+    #fxCanvas,
+    #particles,
+    .actions,
+    #toast,
+    #loader,
+    .pr {
+        display: none !important;
+    }
+    body {
+        background: #fff;
+        color: #111;
+    }
+    .kartu {
+        border: 2px solid #C9A84C;
+        box-shadow: none;
+        opacity: 1;
+        transform: none;
+    }
+    .kartu-glow,
+    .kartu-glow-inner {
+        display: none;
+    }
+    .k-title,
+    .k-bismillah,
+    .k-doa,
+    .k-pengirim-nama {
+        color: #8B6914 !important;
+        text-shadow: none !important;
+        -webkit-text-fill-color: #8B6914 !important;
+    }
+    .kartu-topband,
+    .kartu-botband {
+        background: #C9A84C;
+    }
+    .ke,
+    .oc {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+    }
+}
