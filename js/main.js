@@ -36,7 +36,7 @@ window.addEventListener('load', function() {
             setTimeout(fwBurst, 3700);
 
         }, 180);
-    }, 3000);
+    }, 2100);
 });
 
 /* ─────────────────────────────────────────────
@@ -227,8 +227,10 @@ window.addEventListener('load', function() {
 
     /* Kembang api otomatis setiap 6–11 detik */
     (function sched() {
-        setTimeout(function() { fwBurst();
-            sched(); }, 6000 + Math.random() * 5000);
+        setTimeout(function() {
+            fwBurst();
+            sched();
+        }, 6000 + Math.random() * 5000);
     })();
 
     /* Render loop kembang api */
@@ -444,3 +446,17 @@ function showToast(msg) {
         el.classList.remove('show');
     }, 3000);
 }
+
+/* ─────────────────────────────────────────────
+   9. TANGGAL & LOKASI OTOMATIS
+───────────────────────────────────────────── */
+(function() {
+    var el = document.getElementById("tanggal-lokasi");
+    if (!el) return;
+
+    var today = new Date();
+    var options = { day: 'numeric', month: 'long', year: 'numeric' };
+    var tanggal = today.toLocaleDateString('id-ID', options);
+
+    el.innerText = `Tangkitbatu, ${tanggal}`;
+})();
