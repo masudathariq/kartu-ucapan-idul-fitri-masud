@@ -36,7 +36,7 @@ window.addEventListener('load', function() {
             setTimeout(fwBurst, 3700);
 
         }, 180);
-    }, 2100);
+    }, 3000);
 });
 
 /* ─────────────────────────────────────────────
